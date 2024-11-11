@@ -23,6 +23,7 @@ function(_parse_path_vars PATH_VARS PATH_VARS_ARG INLINE_CONTENT ERROR)
     math(EXPR PAIR_COUNT "${PATH_VARS_LENGTH} / 2")
 
     set(_PATH_VARS_ARG "PATH_VARS")
+    set(_INLINE_CONTENT "")
 
     foreach(PAIR_IDX RANGE 1 ${PAIR_COUNT})
         math(EXPR VAR_IDX "(${PAIR_IDX}-1)*2")
@@ -34,10 +35,12 @@ function(_parse_path_vars PATH_VARS PATH_VARS_ARG INLINE_CONTENT ERROR)
         set(${CUR_PAIR_VAR} ${CUR_PAIR_VALUE} PARENT_SCOPE)
 
         list(APPEND _PATH_VARS_ARG "${CUR_PAIR_VAR}")
+	list(APPEND _INLINE_CONTENT "set (${CUR_PAIR_VAR} \"@${CUR_PAIR_VAR}@\")")
     endforeach()
 
     # write through return values
     set(${PATH_VARS_ARG} ${_PATH_VARS_ARG} PARENT_SCOPE)
+    set(${INLINE_CONTENT} ${_INLINE_CONTENT} PARENT_SCOPE)
 endfunction()
 
 function(evc_setup_package)
@@ -129,7 +132,7 @@ function(evc_setup_package)
             "@PACKAGE_INIT@\n\n"
             "include(\${CMAKE_CURRENT_LIST_DIR}/${LIBRARY_PACKAGE_NAME}-targets.cmake)\n\n"
             "include(CMakeFindDependencyMacro)\n"
-            "${INLINE_CONTENT}"
+            "${INLINE_CONTENT}\n"
             "${CONFIG_ADDITIONAL_CONTENT}\n"
             "check_required_components(${LIBRARY_PACKAGE_NAME})\n"
         )
