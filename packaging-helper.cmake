@@ -35,7 +35,7 @@ function(_parse_path_vars PATH_VARS PATH_VARS_ARG INLINE_CONTENT ERROR)
         set(${CUR_PAIR_VAR} ${CUR_PAIR_VALUE} PARENT_SCOPE)
 
         list(APPEND _PATH_VARS_ARG "${CUR_PAIR_VAR}")
-	list(APPEND _INLINE_CONTENT "set (${CUR_PAIR_VAR} \"@${CUR_PAIR_VAR}@\")")
+	list(APPEND _INLINE_CONTENT "set (${CUR_PAIR_VAR} \"@PACKAGE_${CUR_PAIR_VAR}@\")")
     endforeach()
 
     # write through return values
